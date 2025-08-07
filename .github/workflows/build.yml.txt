@@ -1,0 +1,42 @@
+name: Build Vite Project for SharePoint
+
+# This action will trigger on every push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Use a standard Linux environment for the build
+
+    steps:
+      # Step 1: Check out your repository code so the workflow can access it
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js. This is where the magic happens without you needing to install it.
+      # The action will install Node.js and npm in the temporary build environment.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Use a stable LTS version of Node.js
+          cache: 'npm' # Speed up future builds by caching dependencies
+
+      # Step 3: Install all the project dependencies from package.json
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run the build script defined in your package.json
+      # This creates the 'dist' folder with your final application files.
+      - name: Build project
+        run: npm run build
+
+      # Step 5: Package the 'dist' folder into a .zip file
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharepoint-build-package # The name of the downloadable file
+          path: dist # The folder to zip up
