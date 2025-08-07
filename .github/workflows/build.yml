@@ -17,13 +17,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js. This is where the magic happens without you needing to install it.
-      # The action will install Node.js and npm in the temporary build environment.
+      # Step 2: Set up Node.js. The caching line that caused the error has been removed.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18' # Use a stable LTS version of Node.js
-          cache: 'npm' # Speed up future builds by caching dependencies
 
       # Step 3: Install all the project dependencies from package.json
       - name: Install dependencies
